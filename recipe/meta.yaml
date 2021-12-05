@@ -1,4 +1,5 @@
 {% set name = "libavif" %}
+# NOTE: Humans must also update the library version in the tests section of this recipe
 {% set version = "0.9.3" %}
 
 package:
@@ -31,8 +32,10 @@ test:
     - python >=3.6
   files:
     - check-exists.py
+# Look in the libavif top level CMakeLists.txt for the updated library
+# version (not the same as the project version) to update parameters for existence checks
   commands:
-    - python check-exists.py 10 0 0
+    - python check-exists.py 13 0 0
 
 about:
   home: https://github.com/AOMediaCodec/libavif
