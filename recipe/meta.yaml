@@ -1,5 +1,5 @@
 {% set name = "libavif" %}
-{% set version = "0.9.0" %}
+{% set version = "0.9.3" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: ea1603fc18e7dd20cf01f0b405156576886ecb5df84db8c0e87187cd2f8a00f4
+  sha256: bcd9a1f57f982a9615eb7e2faf87236dc88eb1d0c886f3471c7440ead605060d
 
 build:
   run_exports:
@@ -39,7 +39,7 @@ about:
   license: BSD-2-Clause
   license_family: BSD
   license_file: LICENSE
-  summary: 'A friendly, portable C implementation of the AV1 Image File Format'
+  summary: A friendly, portable C implementation of the AV1 Image File Format
   description: |
     This library aims to be a friendly, portable C implementation of the AV1
     Image File Format, as described here
