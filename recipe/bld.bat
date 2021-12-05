@@ -19,7 +19,10 @@ if errorlevel 1 exit /b 1
 ninja
 if errorlevel 1 exit /b 1
 
-.\aviftest ..\tests\data\
+:: 2021/12/05 hmaarrfk
+:: Tests are a little flaky, and are disabled upstream
+:: https://github.com/AOMediaCodec/libavif/issues/798
+.\aviftest ..\tests\data\ --io-only
 if errorlevel 1 exit /b 1
 
 ninja install
