@@ -17,7 +17,7 @@ source:
 build:
   run_exports:
     # TODO: Relax constraint when libavif >=1.0.0
-    # The SO name changes ever version
+    # The SO name changes every version
     # https://github.com/AOMediaCodec/libavif/issues/799
     - {{ pin_subpackage('libavif', min_pin='x.x.x', max_pin='x.x.x') }}
   number: 0
@@ -35,23 +35,23 @@ requirements:
 
 test:
   commands:
-    - test -f ${PREFIX}/include/avif/avif.h                          # [unix]
-    - if not exist %PREFIX%\\Library\\include\\avif\\avif.h exit 1   # [win]
-    - test -f ${PREFIX}/lib/libavif${SHLIB_EXT}                    # [unix]
-    - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}      # [linux]
-    - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}            # [linux]
-    - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib   # [osx]
-    - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib         # [osx]
-    - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1         # [win]
-    - if not exist %PREFIX%\\Library\\lib\\avif.lib exit 1         # [win]
-    - if not exist %PREFIX%\\Library\\lib\\pkgconfig\\libavif.pc exit 1    # [win]
-    - test -f ${PREFIX}/lib/pkgconfig/libavif.pc                           # [unix]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake             # [unix]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake     # [unix]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake     # [unix]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config.cmake exit 1            # [win]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-release.cmake exit 1    # [win]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1    # [win]
+    - test -f ${PREFIX}/include/avif/avif.h                         # [unix]
+    - if not exist %PREFIX%\\Library\\include\\avif\\avif.h exit 1  # [win]
+    - test -f ${PREFIX}/lib/libavif${SHLIB_EXT}                   # [unix]
+    - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}     # [linux]
+    - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}           # [linux]
+    - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib  # [osx]
+    - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib        # [osx]
+    - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1        # [win]
+    - if not exist %PREFIX%\\Library\\lib\\avif.lib exit 1        # [win]
+    - test -f ${PREFIX}/lib/pkgconfig/libavif.pc                         # [unix]
+    - if not exist %PREFIX%\\Library\\lib\\pkgconfig\\libavif.pc exit 1  # [win]
+    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake           # [unix]
+    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake   # [unix]
+    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake   # [unix]
+    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config.cmake exit 1          # [win]
+    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-release.cmake exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1  # [win]
 
 about:
   home: https://github.com/AOMediaCodec/libavif
