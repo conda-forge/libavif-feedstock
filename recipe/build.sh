@@ -15,6 +15,9 @@ cmake .. "${CMAKE_ARGS}" -GNinja \
 
 ninja
 
-./aviftest ../tests/data/
+# 2021/12/05 hmaarrfk
+# Tests are a little flaky, and are disabled upstream
+# https://github.com/AOMediaCodec/libavif/issues/798
+./aviftest ../tests/data/ --io-only
 
 ninja install
