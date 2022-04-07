@@ -31,8 +31,8 @@ requirements:
     - meson
   host:
     - aom
-    - libpng
-    - jpeg
+    # - libpng
+    # - jpeg
     # - svt-av1  # TODO: linking error with this optional library
 
 test:
