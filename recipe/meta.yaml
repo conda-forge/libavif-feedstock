@@ -32,6 +32,7 @@ requirements:
   host:
     - aom
     - libpng
+    - jpeg
     # - svt-av1  # TODO: linking error with this optional library
 
 test:
