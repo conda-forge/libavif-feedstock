@@ -1,3 +1,5 @@
+mkdir -p ${PREFIX}/bin
+
 mkdir build
 cd build
 AVIF_BUILD_TESTS=ON
