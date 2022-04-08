@@ -1,12 +1,12 @@
 mkdir build
 cd build
-AVIF_BUILD_TESTS=ON
-if [[ "${target_platform}" != "${build_platform}" ]]; then
-# OSX Cross compiles and can't emulate
-if [[ "${target_platform}" == osx-* ]]; then
-    AVIF_BUILD_TESTS=OFF
-fi
-fi
+# 2022/04/07 hmaarrfk:
+# Tests have strange dependencies, which aren't required for the
+# actual application
+# If enabling tests again, be mindful that certain tests may be flaky
+# https://github.com/conda-forge/libavif-feedstock/blob/837c50bee52e8d4132b114cda164382e5dcb0264/recipe/build.sh#L28
+# https://github.com/AOMediaCodec/libavif/issues/798
+AVIF_BUILD_TESTS=OFF
 
 # Other codecs cannot be enabled because they are not on conda-forge
 cmake .. "${CMAKE_ARGS}" -GNinja \
@@ -22,12 +22,5 @@ cmake .. "${CMAKE_ARGS}" -GNinja \
 -DAVIF_BUILD_TESTS=${AVIF_BUILD_TESTS}
 
 ninja
-
-# 2021/12/05 hmaarrfk
-# Tests are a little flaky, and are disabled upstream
-# https://github.com/AOMediaCodec/libavif/issues/798
-if [[ "${AVIF_BUILD_TESTS}" == "ON" ]]; then
-    ./aviftest ../tests/data/ --io-only
-fi
 
 ninja install

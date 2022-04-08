@@ -1,9 +1,9 @@
 {% set name = "libavif" %}
 # NOTE: Humans must also update the library version in the tests section of this recipe
-{% set version = "0.9.3" %}
+{% set version = "0.10.0" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
-{% set so_version = "13.0.0" %}
+{% set so_version = "14.0.0" %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
@@ -12,7 +12,7 @@ package:
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: bcd9a1f57f982a9615eb7e2faf87236dc88eb1d0c886f3471c7440ead605060d
+  sha256: d289e5029cb3853630ca85716b25b5fb9cdec51f8bd537b05f43b3325b480ab0
 
 build:
   run_exports:
@@ -20,7 +20,7 @@ build:
     # The SO name changes every version
     # https://github.com/AOMediaCodec/libavif/issues/799
     - {{ pin_subpackage('libavif', min_pin='x.x.x', max_pin='x.x.x') }}
-  number: 1
+  number: 0
 
 requirements:
   build:
@@ -31,6 +31,8 @@ requirements:
     - meson
   host:
     - aom
+    # - libpng
+    # - jpeg
     # - svt-av1  # TODO: linking error with this optional library
 
 test:
