@@ -13,6 +13,10 @@ package:
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
   sha256: d289e5029cb3853630ca85716b25b5fb9cdec51f8bd537b05f43b3325b480ab0
+  patches:
+    # Remove in version after 0.10.0
+    # https://github.com/AOMediaCodec/libavif/pull/915
+    - 915-Dont_use_a_non-constant_expr_as_union_initializer.patch
 
 build:
   run_exports:
@@ -20,7 +24,7 @@ build:
     # The SO name changes every version
     # https://github.com/AOMediaCodec/libavif/issues/799
     - {{ pin_subpackage('libavif', min_pin='x.x.x', max_pin='x.x.x') }}
-  number: 0
+  number: 1
 
 requirements:
   build:
