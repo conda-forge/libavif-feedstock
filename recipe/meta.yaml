@@ -1,9 +1,9 @@
 {% set name = "libavif" %}
 # NOTE: Humans must also update the library version in the tests section of this recipe
-{% set version = "0.10.0" %}
+{% set version = "0.10.1" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
-{% set so_version = "14.0.0" %}
+{% set so_version = "14.0.1" %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
@@ -12,11 +12,7 @@ package:
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: d289e5029cb3853630ca85716b25b5fb9cdec51f8bd537b05f43b3325b480ab0
-  patches:
-    # Remove in version after 0.10.0
-    # https://github.com/AOMediaCodec/libavif/pull/915
-    - 915-Dont_use_a_non-constant_expr_as_union_initializer.patch
+  sha256: 66e82854ceb84a3e542bc140a343bc90e56c68f3ecb4fff63e636c136ed9a05e
 
 build:
   run_exports:
@@ -24,7 +20,7 @@ build:
     # The SO name changes every version
     # https://github.com/AOMediaCodec/libavif/issues/799
     - {{ pin_subpackage('libavif', min_pin='x.x.x', max_pin='x.x.x') }}
-  number: 1
+  number: 0
 
 requirements:
   build:
