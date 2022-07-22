@@ -12,7 +12,7 @@ cmake .. -GNinja                                 ^
   -DAVIF_BUILD_TESTS=OFF                         ^
   -DAVIF_CODEC_AOM=ON                            ^
   -DAVIF_CODEC_SVT=OFF                           ^
-  -DAVIF_CODEC_DAV1D=OFF                         ^
+  -DAVIF_CODEC_DAV1D=ON                          ^
   -DAVIF_CODEC_LIBGAV1=OFF
 if errorlevel 1 exit /b 1
 
