@@ -3,7 +3,7 @@
 {% set version = "0.11.0" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
-{% set so_version = "14.0.1" %}
+{% set so_version = "15.0.0" %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
