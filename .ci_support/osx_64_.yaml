@@ -5,11 +5,13 @@ aom:
 c_compiler:
 - clang
 c_compiler_version:
-- '14'
+- '15'
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
+dav1d:
+- 1.2.0
 macos_machine:
 - x86_64-apple-darwin13.4.0
 target_platform:
