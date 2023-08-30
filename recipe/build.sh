@@ -9,7 +9,7 @@ cd build
 AVIF_BUILD_TESTS=OFF
 
 # Other codecs cannot be enabled because they are not on conda-forge
-cmake .. "${CMAKE_ARGS}" -GNinja \
+cmake ${CMAKE_ARGS} -GNinja \
 -DCMAKE_INSTALL_PREFIX="$PREFIX" \
 -DCMAKE_INSTALL_LIBDIR=lib \
 -DBUILD_SHARED_LIBS=ON \
@@ -19,7 +19,8 @@ cmake .. "${CMAKE_ARGS}" -GNinja \
 -DAVIF_CODEC_SVT=OFF \
 -DAVIF_CODEC_DAV1D=ON \
 -DAVIF_CODEC_LIBGAV1=OFF \
--DAVIF_BUILD_TESTS=${AVIF_BUILD_TESTS}
+-DAVIF_BUILD_TESTS=${AVIF_BUILD_TESTS} \
+${SRC_DIR}
 
 ninja
 
