@@ -21,9 +21,7 @@ requirements:
   build:
     - cmake
     - {{ compiler('c') }}
-    - nasm
     - ninja
-    - meson
   host:
     - aom
     - dav1d
@@ -51,9 +49,7 @@ outputs:
       build:
         - cmake
         - {{ compiler('c') }}
-        - nasm
         - ninja
-        - meson
       host:
         - aom
         - dav1d
@@ -96,9 +92,7 @@ outputs:
       build:
         - cmake
         - {{ compiler('c') }}
-        - nasm
         - ninja
-        - meson
       host:
         - aom
         - dav1d
