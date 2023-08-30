@@ -14,5 +14,7 @@ dav1d:
 - 1.2.1
 macos_machine:
 - x86_64-apple-darwin13.4.0
+svt_av1:
+- 1.7.0
 target_platform:
 - osx-64
