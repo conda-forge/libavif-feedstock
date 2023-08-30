@@ -39,7 +39,8 @@ outputs:
     files:
       - include/avif             # [unix]
       - Library\\include\\avif   # [win]
-      - lib/libavif${SHLIB_EXT}  # [unix]
+      - lib/libavif.so     # [linux]
+      - lib/libavif.dylib  # [osx]
       - Library\\bin\\avif.dll   # [win]
       - Library\\lib\\avif.lib   # [win]
       - lib/pkgconfig/libavif.pc             # [unix]
