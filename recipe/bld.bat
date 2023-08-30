@@ -11,7 +11,7 @@ cmake .. -GNinja                                 ^
   -DBUILD_SHARED_LIBS=ON                         ^
   -DAVIF_BUILD_TESTS=OFF                         ^
   -DAVIF_CODEC_AOM=ON                            ^
-  -DAVIF_CODEC_SVT=OFF                           ^
+  -DAVIF_CODEC_SVT=ON                           ^
   -DAVIF_CODEC_DAV1D=ON                          ^
   -DAVIF_CODEC_LIBGAV1=OFF                       ^
   -DAVIF_CODEC_RAV1E=ON
