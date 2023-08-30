@@ -87,6 +87,7 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libavif-green.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libavif16-green.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) |
 
 Installing libavif
 ==================
@@ -98,16 +99,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libavif` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `libavif, libavif16` can be installed with `conda`:
 
 ```
-conda install libavif
+conda install libavif libavif16
 ```
 
 or with `mamba`:
 
 ```
-mamba install libavif
+mamba install libavif libavif16
 ```
 
 It is possible to list all of the versions of `libavif` available on your platform with `conda`:
