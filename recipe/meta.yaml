@@ -27,6 +27,7 @@ requirements:
     - dav1d
     # - libpng
     # - jpeg
+    - rav1e
     # - svt-av1  # TODO: linking error with this optional library
 
 outputs:
@@ -55,6 +56,7 @@ outputs:
         - dav1d
         # - libpng
         # - jpeg
+        - rav1e
         # - svt-av1  # TODO: linking error with this optional library
       run:
         - {{ pin_subpackage('libavif' ~ so_major_version, exact=True) }}  # [not win]
@@ -98,6 +100,7 @@ outputs:
         - dav1d
         # - libpng
         # - jpeg
+        - rav1e
         # - svt-av1  # TODO: linking error with this optional library
     test:
       commands:
