@@ -37,13 +37,13 @@ outputs:
       run_exports:
         - {{ pin_subpackage('libavif' ~ so_major_version) }}
     files:
-      - include/avif            # [unix]
-      - Library\\include\\avif  # [win]
-      - lib/libavif${SHLIB_EXT}        # [unix]
-      - Library\\bin\\avif.dll exit 1  # [win]
-      - Library\\lib\\avif.lib exit 1  # [win]
-      - lib/pkgconfig/libavif.pc                    # [unix]
-      - Library\\lib\\pkgconfig\\libavif.pc exit 1  # [win]
+      - include/avif             # [unix]
+      - Library\\include\\avif   # [win]
+      - lib/libavif${SHLIB_EXT}  # [unix]
+      - Library\\bin\\avif.dll   # [win]
+      - Library\\lib\\avif.lib   # [win]
+      - lib/pkgconfig/libavif.pc             # [unix]
+      - Library\\lib\\pkgconfig\\libavif.pc  # [win]
       - lib/cmake/libavif             # [unix]
       - Library\\lib\\cmake\\libavif  # [win]
     requirements:
