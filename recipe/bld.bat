@@ -14,7 +14,7 @@ cmake .. -GNinja                                 ^
   -DAVIF_CODEC_SVT=ON                           ^
   -DAVIF_CODEC_DAV1D=ON                          ^
   -DAVIF_CODEC_LIBGAV1=OFF                       ^
-  -DAVIF_CODEC_RAV1E=OFF
+  -DAVIF_CODEC_RAV1E=ON
 
 if errorlevel 1 exit /b 1
 

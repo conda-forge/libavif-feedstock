@@ -13,6 +13,8 @@ package:
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 398fe7039ce35db80fe7da8d116035924f2c02ea4a4aa9f4903df6699287599c
+  patches:
+    - 000-find-library.patch
 
 build:
   number: 0
@@ -27,7 +29,7 @@ requirements:
     - dav1d
     # - libpng
     # - jpeg
-    # - rav1e  # OSX ARM missing, and Windows library locating error
+    - rav1e  # OSX ARM missing, and Windows library locating error
     - svt-av1
 
 outputs:
@@ -56,7 +58,7 @@ outputs:
         - dav1d
         # - libpng
         # - jpeg
-        # - rav1e
+        - rav1e
         - svt-av1
       run:
         - {{ pin_subpackage('libavif' ~ so_major_version, exact=True) }}  # [not win]
@@ -100,7 +102,7 @@ outputs:
         - dav1d
         # - libpng
         # - jpeg
-        # - rav1e
+        - rav1e
         - svt-av1
     test:
       commands:
