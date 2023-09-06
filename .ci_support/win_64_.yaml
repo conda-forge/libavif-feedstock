@@ -8,5 +8,7 @@ channel_targets:
 - conda-forge main
 dav1d:
 - 1.2.1
+svt_av1:
+- 1.7.0
 target_platform:
 - win-64

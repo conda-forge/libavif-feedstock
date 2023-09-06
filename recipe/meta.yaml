@@ -1,60 +1,121 @@
-{% set name = "libavif" %}
 # NOTE: Humans must also update the library version in the tests section of this recipe
-{% set version = "0.11.1" %}
+{% set version = "1.0.1" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
-{% set so_version = "15.0.1" %}
+# The SO name changes every version https://github.com/AOMediaCodec/libavif/issues/799
+{% set so_version = "16.0.1" %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
-  name: {{ name|lower }}
+  name: libavif-split
   version: {{ version }}
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 0eb49965562a0e5e5de58389650d434cff32af84c34185b6c9b7b2fccae06d4e
+  sha256: 398fe7039ce35db80fe7da8d116035924f2c02ea4a4aa9f4903df6699287599c
+  patches:
+    - 000-find-library.patch
 
 build:
-  run_exports:
-    # TODO: Relax constraint when libavif >=1.0.0
-    # The SO name changes every version
-    # https://github.com/AOMediaCodec/libavif/issues/799
-    - {{ pin_subpackage('libavif', min_pin='x.x.x', max_pin='x.x.x') }}
-  number: 2
+  number: 0
 
 requirements:
   build:
     - cmake
     - {{ compiler('c') }}
-    - nasm
     - ninja
-    - meson
   host:
     - aom
     - dav1d
     # - libpng
     # - jpeg
-    # - svt-av1  # TODO: linking error with this optional library
+    - rav1e  # OSX ARM missing, and Windows library locating error
+    - svt-av1
 
-test:
-  commands:
-    - test -f ${PREFIX}/include/avif/avif.h                         # [unix]
-    - if not exist %PREFIX%\\Library\\include\\avif\\avif.h exit 1  # [win]
-    - test -f ${PREFIX}/lib/libavif${SHLIB_EXT}                   # [unix]
-    - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}     # [linux]
-    - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}           # [linux]
-    - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib  # [osx]
-    - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib        # [osx]
-    - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1        # [win]
-    - if not exist %PREFIX%\\Library\\lib\\avif.lib exit 1        # [win]
-    - test -f ${PREFIX}/lib/pkgconfig/libavif.pc                         # [unix]
-    - if not exist %PREFIX%\\Library\\lib\\pkgconfig\\libavif.pc exit 1  # [win]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake           # [unix]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake   # [unix]
-    - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake   # [unix]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config.cmake exit 1          # [win]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-release.cmake exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1  # [win]
+outputs:
+  - name: libavif
+    build:
+      run_exports:
+        - {{ pin_subpackage('libavif' ~ so_major_version) }}
+    files:
+      - include/avif             # [unix]
+      - Library\\include\\avif   # [win]
+      - lib/libavif.so     # [linux]
+      - lib/libavif.dylib  # [osx]
+      - Library\\bin\\avif.dll   # [win]
+      - Library\\lib\\avif.lib   # [win]
+      - lib/pkgconfig/libavif.pc             # [unix]
+      - Library\\lib\\pkgconfig\\libavif.pc  # [win]
+      - lib/cmake/libavif             # [unix]
+      - Library\\lib\\cmake\\libavif  # [win]
+    requirements:
+      build:
+        - cmake
+        - {{ compiler('c') }}
+        - ninja
+      host:
+        - aom
+        - dav1d
+        # - libpng
+        # - jpeg
+        - rav1e
+        - svt-av1
+      run:
+        - {{ pin_subpackage('libavif' ~ so_major_version, exact=True) }}  # [not win]
+    test:
+      commands:
+        - test -f ${PREFIX}/include/avif/avif.h                         # [unix]
+        - if not exist %PREFIX%\\Library\\include\\avif\\avif.h exit 1  # [win]
+        - test -f ${PREFIX}/lib/libavif${SHLIB_EXT}                   # [unix]
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}     # [linux]
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}           # [linux]
+        - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib  # [osx]
+        - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib        # [osx]
+        - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1        # [win]
+        - if not exist %PREFIX%\\Library\\lib\\avif.lib exit 1        # [win]
+        - test -f ${PREFIX}/lib/pkgconfig/libavif.pc                         # [unix]
+        - if not exist %PREFIX%\\Library\\lib\\pkgconfig\\libavif.pc exit 1  # [win]
+        - test -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake           # [unix]
+        - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake   # [unix]
+        - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake   # [unix]
+        - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config.cmake exit 1          # [win]
+        - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-release.cmake exit 1  # [win]
+        - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1  # [win]
+
+  - name: libavif{{ so_major_version }}
+    build:
+      skip: true  # [win]
+      run_exports:
+        - {{ pin_subpackage('libavif' ~ so_major_version) }}
+    files:
+      - lib/libavif.so.{{ so_major_version }}     # [linux]
+      - lib/libavif.so.{{ so_version }}           # [linux]
+      - lib/libavif.{{ so_major_version }}.dylib  # [osx]
+      - lib/libavif.{{ so_version }}.dylib        # [osx]
+    requirements:
+      build:
+        - cmake
+        - {{ compiler('c') }}
+        - ninja
+      host:
+        - aom
+        - dav1d
+        # - libpng
+        # - jpeg
+        - rav1e
+        - svt-av1
+    test:
+      commands:
+      - test ! -f ${PREFIX}/include/avif/avif.h                             # [unix]
+      - test ! -f ${PREFIX}/lib/libavif${SHLIB_EXT}                         # [unix]
+      - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}             # [linux]
+      - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}                   # [linux]
+      - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib          # [osx]
+      - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib                # [osx]
+      - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                        # [unix]
+      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake          # [unix]
+      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake  # [unix]
+      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake  # [unix]
 
 about:
   home: https://github.com/AOMediaCodec/libavif
@@ -71,3 +132,4 @@ extra:
   recipe-maintainers:
     - carterbox
     - hmaarrfk
+  feedstock-name: libavif
