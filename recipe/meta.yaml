@@ -17,7 +17,7 @@ source:
     - 000-find-library.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -36,7 +36,8 @@ outputs:
   - name: libavif
     build:
       run_exports:
-        - {{ pin_subpackage('libavif' ~ so_major_version) }}
+        - {{ pin_subpackage('libavif' ~ so_major_version) }}   # [unix]
+        - {{ pin_subpackage('libavif', max_pin='x.x.x') }}     # [win]
     files:
       - include/avif             # [unix]
       - Library\\include\\avif   # [win]
