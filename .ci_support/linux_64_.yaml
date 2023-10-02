@@ -1,5 +1,5 @@
 aom:
-- '3.5'
+- '3.6'
 c_compiler:
 - gcc
 c_compiler_version:
