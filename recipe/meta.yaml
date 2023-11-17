@@ -115,8 +115,8 @@ outputs:
         - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib              # [osx]
         - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                      # [unix]
         - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake        # [unix]
-        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake # [unix]
-        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake  # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake  # [unix]
 
 about:
   home: https://github.com/AOMediaCodec/libavif
