@@ -1,9 +1,9 @@
 # NOTE: Humans must also update the library version in the tests section of this recipe
-{% set version = "1.0.1" %}
+{% set version = "1.0.2" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
 # The SO name changes every version https://github.com/AOMediaCodec/libavif/issues/799
-{% set so_version = "16.0.1" %}
+{% set so_version = "16.0.2" %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
@@ -12,12 +12,12 @@ package:
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 398fe7039ce35db80fe7da8d116035924f2c02ea4a4aa9f4903df6699287599c
+  sha256: de8bf79488c5b523b77358df8b85ae69c3078e6b3f1636fc1f313f952269ad20
   patches:
     - 000-find-library.patch
 
 build:
-  number: 3
+  number: 0
 
 requirements:
   build:
@@ -107,16 +107,16 @@ outputs:
         - svt-av1
     test:
       commands:
-      - test ! -f ${PREFIX}/include/avif/avif.h                             # [unix]
-      - test ! -f ${PREFIX}/lib/libavif${SHLIB_EXT}                         # [unix]
-      - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}             # [linux]
-      - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}                   # [linux]
-      - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib          # [osx]
-      - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib                # [osx]
-      - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                        # [unix]
-      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake          # [unix]
-      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake  # [unix]
-      - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake  # [unix]
+        - test ! -f ${PREFIX}/include/avif/avif.h                           # [unix]
+        - test ! -f ${PREFIX}/lib/libavif${SHLIB_EXT}                       # [unix]
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}           # [linux]
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}                 # [linux]
+        - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib        # [osx]
+        - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib              # [osx]
+        - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                      # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake        # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake  # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake  # [unix]
 
 about:
   home: https://github.com/AOMediaCodec/libavif
