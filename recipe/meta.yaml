@@ -3,7 +3,7 @@
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
 # The SO name changes every version https://github.com/AOMediaCodec/libavif/issues/799
-{% set so_version = "16.0.2" %}
+{% set so_version = "16.0." ~ version.split('.')[2] %}
 {% set so_major_version = so_version.split('.')[0] %}
 
 package:
