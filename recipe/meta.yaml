@@ -13,8 +13,6 @@ package:
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 35e3cb3cd7158209dcc31d3bf222036de5b9597e368a90e18449ecc89bb86a19
-  patches:
-    - 000-find-library.patch
 
 build:
   number: 0
