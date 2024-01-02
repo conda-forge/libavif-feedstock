@@ -36,19 +36,16 @@ outputs:
   - name: libavif
     build:
       run_exports:
-        - {{ pin_subpackage('libavif' ~ so_major_version) }}   # [unix]
-        - {{ pin_subpackage('libavif', max_pin='x.x.x') }}     # [win]
+        - {{ pin_subpackage('libavif' ~ so_major_version) }}
     files:
-      - include/avif             # [unix]
-      - Library\\include\\avif   # [win]
-      - lib/libavif.so     # [linux]
-      - lib/libavif.dylib  # [osx]
-      - Library\\bin\\avif.dll   # [win]
-      - Library\\lib\\avif.lib   # [win]
-      - lib/pkgconfig/libavif.pc             # [unix]
-      - Library\\lib\\pkgconfig\\libavif.pc  # [win]
-      - lib/cmake/libavif             # [unix]
-      - Library\\lib\\cmake\\libavif  # [win]
+      - include/avif                                                          # [unix]
+      - Library\\include\\avif                                                # [win]
+      - lib/libavif{{ SHLIB_EXT }}                                            # [unix]
+      - Library\\lib\\avif.lib                                                # [win]
+      - lib/pkgconfig/libavif.pc                                              # [unix]
+      - Library\\lib\\pkgconfig\\libavif.pc                                   # [win]
+      - lib/cmake/libavif                                                     # [unix]
+      - Library\\lib\\cmake\\libavif                                          # [win]
     requirements:
       build:
         - cmake
@@ -62,7 +59,7 @@ outputs:
         - rav1e
         - svt-av1
       run:
-        - {{ pin_subpackage('libavif' ~ so_major_version, exact=True) }}  # [not win]
+        - {{ pin_subpackage('libavif' ~ so_major_version, exact=True) }}
     test:
       commands:
         - test -f ${PREFIX}/include/avif/avif.h                         # [unix]
@@ -85,7 +82,6 @@ outputs:
 
   - name: libavif{{ so_major_version }}
     build:
-      skip: true  # [win]
       run_exports:
         - {{ pin_subpackage('libavif' ~ so_major_version) }}
     files:
@@ -93,6 +89,7 @@ outputs:
       - lib/libavif.so.{{ so_version }}           # [linux]
       - lib/libavif.{{ so_major_version }}.dylib  # [osx]
       - lib/libavif.{{ so_version }}.dylib        # [osx]
+      - Library\\bin\\avif.dll                    # [win]
     requirements:
       build:
         - cmake
@@ -105,18 +102,35 @@ outputs:
         # - jpeg
         - rav1e
         - svt-av1
+      run:
+        - {{ pin_subpackage('_libavif_api', max_pin='x.x.x') }}               # [win]
     test:
       commands:
-        - test ! -f ${PREFIX}/include/avif/avif.h                           # [unix]
-        - test ! -f ${PREFIX}/lib/libavif${SHLIB_EXT}                       # [unix]
-        - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}           # [linux]
-        - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}                 # [linux]
-        - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib        # [osx]
-        - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib              # [osx]
-        - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                      # [unix]
-        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake        # [unix]
+      # Need these
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_major_version }}             # [linux]
+        - test -f ${PREFIX}/lib/libavif.so.{{ so_version }}                   # [linux]
+        - test -f ${PREFIX}/lib/libavif.{{ so_major_version }}.dylib          # [osx]
+        - test -f ${PREFIX}/lib/libavif.{{ so_version }}.dylib                # [osx]
+        - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1                # [win]
+      # Exclude these
+        - test ! -f ${PREFIX}/include/avif/avif.h                             # [unix]
+        - test ! -f ${PREFIX}/lib/libavif{{ SHLIB_EXT }}                      # [unix]
+        - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc                        # [unix]
+        - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake          # [unix]
         - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake  # [unix]
         - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake  # [unix]
+        - if exist %PREFIX%\\Library\\lib\\avif.lib exit 1                    # [win]
+
+  # Clobber preventer for Windows; prevents multiple dll files from being
+  # installed simultaneously. This lets us avoid exporting a strict pin on the
+  # API which is not strictly correlated with the ABI.
+  - name: _libavif_api
+    build:
+      skip: true  # [not win]
+    about:
+      summary: >
+        An empty package that prevents multiple ABIs being installed
+        simultaneously on Windows.
 
 about:
   home: https://github.com/AOMediaCodec/libavif
