@@ -3,6 +3,10 @@ About libavif-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/libavif-feedstock/blob/main/LICENSE.txt)
 
+
+About libavif
+-------------
+
 Home: https://github.com/AOMediaCodec/libavif
 
 Package license: BSD-2-Clause
@@ -12,6 +16,16 @@ Summary: A friendly, portable C implementation of the AV1 Image File Format
 This library aims to be a friendly, portable C implementation of the AV1
 Image File Format, as described here
 <https://aomediacodec.github.io/av1-avif/>.
+
+
+About _libavif_api
+------------------
+
+
+
+Package license: 
+
+Summary: An empty package that prevents multiple ABIs being installed simultaneously on Windows.
 
 
 Current build status
@@ -86,6 +100,7 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-_libavif_api-green.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libavif-green.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libavif16-green.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) |
 
@@ -99,41 +114,41 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `libavif, libavif16` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `_libavif_api, libavif, libavif16` can be installed with `conda`:
 
 ```
-conda install libavif libavif16
-```
-
-or with `mamba`:
-
-```
-mamba install libavif libavif16
-```
-
-It is possible to list all of the versions of `libavif` available on your platform with `conda`:
-
-```
-conda search libavif --channel conda-forge
+conda install _libavif_api libavif libavif16
 ```
 
 or with `mamba`:
 
 ```
-mamba search libavif --channel conda-forge
+mamba install _libavif_api libavif libavif16
+```
+
+It is possible to list all of the versions of `_libavif_api` available on your platform with `conda`:
+
+```
+conda search _libavif_api --channel conda-forge
+```
+
+or with `mamba`:
+
+```
+mamba search _libavif_api --channel conda-forge
 ```
 
 Alternatively, `mamba repoquery` may provide more information:
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search libavif --channel conda-forge
+mamba repoquery search _libavif_api --channel conda-forge
 
-# List packages depending on `libavif`:
-mamba repoquery whoneeds libavif --channel conda-forge
+# List packages depending on `_libavif_api`:
+mamba repoquery whoneeds _libavif_api --channel conda-forge
 
-# List dependencies of `libavif`:
-mamba repoquery depends libavif --channel conda-forge
+# List dependencies of `_libavif_api`:
+mamba repoquery depends _libavif_api --channel conda-forge
 ```
 
 
