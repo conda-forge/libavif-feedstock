@@ -83,17 +83,16 @@ def glob_install(
     )
     for match in sorted(included - excluded):
         match = pathlib.Path(match)
-        relative = match.relative_to(STAGE)
-        if match.is_dir():
-            print(f"{relative} is a directory")
-        else:
-            print(relative)
-            os.makedirs((PREFIX / relative).parent, exist_ok=True)
-            shutil.copy(
-                match,
-                PREFIX / relative,
-                follow_symlinks=False,
-            )
+        if match.exists():
+            relative = match.relative_to(STAGE)
+            if not match.is_dir():
+                print(relative)
+                os.makedirs((PREFIX / relative).parent, exist_ok=True)
+                shutil.copy(
+                    match,
+                    PREFIX / relative,
+                    follow_symlinks=False,
+                )
 
 
 def sort_artifacts_based_on_name(basename):
@@ -102,11 +101,18 @@ def sort_artifacts_based_on_name(basename):
     print(f"Installing {PKG_NAME} to {PREFIX} for {target_platform}")
     print("Based on the package name, ", end="")
 
-    if re.match(r"^[a-z]+\-split$", PKG_NAME):
+    if re.match(r"^.+\-split$", PKG_NAME):
         raise ValueError("The top level package should not run this script.")
 
     # libfoo OR foo-dev OR libfoo-dev
-    if re.match(r"^lib[a-z]+$", PKG_NAME) or re.match(r"^[a-z]+\-dev$", PKG_NAME):
+    # dav1d-dev, v8-dev, m-dev, secp256k1-dev
+    # libdav1d, libv8, libm, libsecp256k1
+    # libdav1d-dev, libv8-dev, libm-dev, libsecp256k1-dev
+    if (
+        re.match(f"^lib{ basename }$", PKG_NAME)
+        or re.match(f"^{ basename }-dev$", PKG_NAME)
+        or re.match(f"^lib{ basename }-dev$", PKG_NAME)
+    ):
         print("this package is needed for compiling/linking.")
         glob_install(
             include=[
@@ -129,7 +135,8 @@ def sort_artifacts_based_on_name(basename):
         return
 
     # libfoo1
-    if re.match(r"^lib[a-z]+[0-9]+$", PKG_NAME):
+    # libdav1d1, libv8-1, libm1, libsecp256k1-1
+    if re.match(f"^lib{ basename }-?[0-9]+$", PKG_NAME):
         print("this package is versioned so/dylib, dlls.")
         glob_install(
             include=[
@@ -141,7 +148,8 @@ def sort_artifacts_based_on_name(basename):
         return
 
     # foo
-    if re.match(f"^{basename}$", PKG_NAME):
+    # dav1d, v8, m, secp256k1
+    if re.match(f"^{ basename }$", PKG_NAME):
         print("this package is tools, docs, and misc files needed for tools.")
         glob_install(
             include=[
@@ -156,7 +164,8 @@ def sort_artifacts_based_on_name(basename):
         return
 
     # libfoo-static
-    if re.match(r"^lib[a-z]+\-static$", PKG_NAME):
+    # libdav1d-static, libv8-static, libm-static, libsecp256k1-static
+    if re.match(f"^lib{ basename }-static$", PKG_NAME):
         print("this package is anything needed for static linking.")
         glob_install(
             include=[
@@ -170,6 +179,9 @@ def sort_artifacts_based_on_name(basename):
         )
         # FIXME: Add static library files here; exclude above
         return
+
+    print("this package has unknown purpose!")
+    raise ValueError("None of the packages names matched!")
 
 
 if __name__ == "__main__":
