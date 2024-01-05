@@ -56,19 +56,14 @@ def glob_install(
             )
         )
     )
-    for match in included - excluded:
+    for match in sorted(included - excluded):
         match = pathlib.Path(match)
         relative = match.relative_to(STAGE)
-        print(relative)
         if match.is_dir():
-            shutil.copytree(
-                match,
-                PREFIX / relative,
-                symlinks=True,
-                ignore_dangling_symlinks=True,
-                dirs_exist_ok=True,
-            )
+            print(f"{relative} is a directory")
         else:
+            print(relative)
+            os.makedirs((PREFIX / relative).parent, exist_ok=True)
             shutil.copy(
                 match,
                 PREFIX / relative,
@@ -90,14 +85,18 @@ def sort_artifacts_based_on_name(basename):
         print("this package is needed for compiling/linking.")
         glob_install(
             include=[
-                "include",
-                "lib",
+                "include/**",
+                "lib/**",
             ],
             exclude=[
+                # versioned libs
                 "lib/lib*.*.dylib",
                 "lib/lib*.so.*",
+                # static libs
                 "lib/lib*.a",
+                "lib/lib*.lib",
                 "lib/*.a.lib",
+                "lib/*_a.lib",
                 "lib/*static.lib",
                 "lib/**/*static*",
             ],
@@ -121,12 +120,12 @@ def sort_artifacts_based_on_name(basename):
         print("this package is tools, docs, and misc files needed for tools.")
         glob_install(
             include=[
-                "bin",
-                "doc",
-                "share",
+                "bin/**",
+                "doc/**",
+                "share/**",
             ],
             exclude=[
-                "bin/**/*.dll",
+                "bin/*.dll",
             ],
         )
         return
@@ -137,7 +136,9 @@ def sort_artifacts_based_on_name(basename):
         glob_install(
             include=[
                 "lib/lib*.a",
+                "lib/lib*.lib",
                 "lib/*.a.lib",
+                "lib/*_a.lib",
                 "lib/*static.lib",
                 "lib/**/*static*",
             ]
