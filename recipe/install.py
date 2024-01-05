@@ -15,28 +15,47 @@ package.
 https://gist.github.com/carterbox/188ac74647e703cfa6700b58b076d712
 """
 
-import pathlib
 import glob
 import os
-import shutil
+import pathlib
 import re
+import shutil
+import typing
+import itertools
 
-PKG_NAME = os.environ["PKG_NAME"]
 target_platform = os.environ["target_platform"]
-PREFIX = pathlib.Path(os.environ["PREFIX"])
 STAGE = pathlib.Path(os.environ["SRC_DIR"]) / "stage"
-basename = "avif"
-
+PREFIX = pathlib.Path(os.environ["PREFIX"])
 if target_platform[:3] == "win":
     PREFIX = PREFIX / "Library"
 
 
 def glob_install(
-    include: str,
-    exclude: str = "",
+    include: typing.List[str],
+    exclude: typing.List[str] = [],
 ):
-    included = set(glob.glob(str(STAGE / pathlib.Path(include))))
-    excluded = set(glob.glob(str(STAGE / pathlib.Path(exclude))))
+    included = set(
+        itertools.chain(
+            *(
+                glob.glob(
+                    str(STAGE / pathlib.Path(item)),
+                    recursive=True,
+                )
+                for item in include
+            )
+        )
+    )
+    excluded = set(
+        itertools.chain(
+            *(
+                glob.glob(
+                    str(STAGE / pathlib.Path(item)),
+                    recursive=True,
+                )
+                for item in exclude
+            )
+        )
+    )
     for match in included - excluded:
         match = pathlib.Path(match)
         relative = match.relative_to(STAGE)
@@ -57,34 +76,75 @@ def glob_install(
             )
 
 
-if __name__ == "__main__":
+def sort_artifacts_based_on_name(basename):
+    PKG_NAME = os.environ["PKG_NAME"]
+
     print(f"Installing {PKG_NAME} to {PREFIX} for {target_platform}")
+    print("Based on the package name, ", end="")
 
     if re.match(r"^[a-z]+\-split$", PKG_NAME):
         raise ValueError("The top level package should not run this script.")
 
     # libfoo OR foo-dev OR libfoo-dev
     if re.match(r"^lib[a-z]+$", PKG_NAME) or re.match(r"^[a-z]+\-dev$", PKG_NAME):
-        glob_install("include")
-        glob_install("lib/*.lib")
-        glob_install("lib/cmake")
-        glob_install("lib/pkgconfig")
-        glob_install(f"lib/lib{basename}.dylib")
-        glob_install(f"lib/lib{basename}.so")
+        print("this package is needed for compiling/linking.")
+        glob_install(
+            include=[
+                "include",
+                "lib",
+            ],
+            exclude=[
+                "lib/lib*.*.dylib",
+                "lib/lib*.so.*",
+                "lib/lib*.a",
+                "lib/*.a.lib",
+                "lib/*static.lib",
+                "lib/**/*static*",
+            ],
+        )
+        return
 
     # libfoo1
     if re.match(r"^lib[a-z]+[0-9]+$", PKG_NAME):
-        glob_install("bin/*.dll")
-        glob_install(f"lib/lib{basename}.*.dylib")
-        glob_install(f"lib/lib{basename}.so.*")
+        print("this package is versioned so/dylib, dlls.")
+        glob_install(
+            include=[
+                "bin/*.dll",
+                "lib/lib*.*.dylib",
+                "lib/lib*.so.*",
+            ]
+        )
+        return
 
     # foo
     if re.match(f"^{basename}$", PKG_NAME):
-        glob_install("bin", exclude="bin/*.dll")
-        glob_install("doc")
-        glob_install("share")
+        print("this package is tools, docs, and misc files needed for tools.")
+        glob_install(
+            include=[
+                "bin",
+                "doc",
+                "share",
+            ],
+            exclude=[
+                "bin/**/*.dll",
+            ],
+        )
+        return
 
     # libfoo-static
     if re.match(r"^lib[a-z]+\-static$", PKG_NAME):
-        glob_install(f"lib/lib{basename}.a")
+        print("this package is anything needed for static linking.")
+        glob_install(
+            include=[
+                "lib/lib*.a",
+                "lib/*.a.lib",
+                "lib/*static.lib",
+                "lib/**/*static*",
+            ]
+        )
         # FIXME: Add static library files here; exclude above
+        return
+
+
+if __name__ == "__main__":
+    sort_artifacts_based_on_name(basename="avif")
