@@ -29,23 +29,15 @@ requirements:
     - dav1d
     # - libpng
     # - jpeg
-    - rav1e  # OSX ARM missing, and Windows library locating error
+    - rav1e
     - svt-av1
 
 outputs:
   - name: libavif
+    script: install.py
     build:
       run_exports:
         - {{ pin_subpackage('libavif' ~ so_major_version) }}
-    files:
-      - include/avif                                                          # [unix]
-      - Library\\include\\avif                                                # [win]
-      - lib/libavif{{ SHLIB_EXT }}                                            # [unix]
-      - Library\\lib\\avif.lib                                                # [win]
-      - lib/pkgconfig/libavif.pc                                              # [unix]
-      - Library\\lib\\pkgconfig\\libavif.pc                                   # [win]
-      - lib/cmake/libavif                                                     # [unix]
-      - Library\\lib\\cmake\\libavif                                          # [win]
     requirements:
       build:
         - cmake
@@ -81,15 +73,10 @@ outputs:
         - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1  # [win]
 
   - name: libavif{{ so_major_version }}
+    script: install.py
     build:
       run_exports:
         - {{ pin_subpackage('libavif' ~ so_major_version) }}
-    files:
-      - lib/libavif.so.{{ so_major_version }}     # [linux]
-      - lib/libavif.so.{{ so_version }}           # [linux]
-      - lib/libavif.{{ so_major_version }}.dylib  # [osx]
-      - lib/libavif.{{ so_version }}.dylib        # [osx]
-      - Library\\bin\\avif.dll                    # [win]
     requirements:
       build:
         - cmake
@@ -144,7 +131,7 @@ about:
     <https://aomediacodec.github.io/av1-avif/>.
 
 extra:
+  feedstock-name: libavif
   recipe-maintainers:
     - carterbox
     - hmaarrfk
-  feedstock-name: libavif
