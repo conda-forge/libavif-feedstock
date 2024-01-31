@@ -1,5 +1,5 @@
 aom:
-- '3.7'
+- '3.8'
 c_compiler:
 - vs2019
 channel_sources:
