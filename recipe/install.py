@@ -91,7 +91,7 @@ def glob_install(
                 shutil.copy(
                     match,
                     PREFIX / relative,
-                    follow_symlinks=False,
+                    follow_symlinks=False,  # copy the link not the linked-file
                 )
 
 
