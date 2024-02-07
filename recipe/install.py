@@ -59,6 +59,7 @@ def glob_install(
     include: typing.List[str],
     exclude: typing.List[str] = [],
 ):
+    """Install files and symlinks (broken or not) from the glob expressions."""
     included = set(
         itertools.chain(
             *(
@@ -83,16 +84,16 @@ def glob_install(
     )
     for match in sorted(included - excluded):
         match = pathlib.Path(match)
-        if match.exists():
+        if match.is_file() or match.is_symlink():
             relative = match.relative_to(STAGE)
-            if not match.is_dir():
-                print(relative)
-                os.makedirs((PREFIX / relative).parent, exist_ok=True)
-                shutil.copy(
-                    match,
-                    PREFIX / relative,
-                    follow_symlinks=False,  # copy the link not the linked-file
-                )
+            print(relative)
+            os.makedirs((PREFIX / relative).parent, exist_ok=True)
+            shutil.copy(
+                match,
+                PREFIX / relative,
+                # copy the link itself; not the linked-file
+                follow_symlinks=False,
+            )
 
 
 def sort_artifacts_based_on_name(basename):
