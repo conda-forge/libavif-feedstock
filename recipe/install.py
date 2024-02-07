@@ -40,7 +40,6 @@ package.
 https://gist.github.com/carterbox/188ac74647e703cfa6700b58b076d712
 """
 
-import glob
 import os
 import pathlib
 import re
@@ -60,28 +59,8 @@ def glob_install(
     exclude: typing.List[str] = [],
 ):
     """Install files and symlinks (broken or not) from the glob expressions."""
-    included = set(
-        itertools.chain(
-            *(
-                glob.glob(
-                    str(STAGE / pathlib.Path(item)),
-                    recursive=True,
-                )
-                for item in include
-            )
-        )
-    )
-    excluded = set(
-        itertools.chain(
-            *(
-                glob.glob(
-                    str(STAGE / pathlib.Path(item)),
-                    recursive=True,
-                )
-                for item in exclude
-            )
-        )
-    )
+    included = set(itertools.chain(*(STAGE.glob(item) for item in include)))
+    excluded = set(itertools.chain(*(STAGE.glob(item) for item in exclude)))
     for match in sorted(included - excluded):
         match = pathlib.Path(match)
         if match.is_file() or match.is_symlink():
@@ -117,8 +96,8 @@ def sort_artifacts_based_on_name(basename):
         print("this package is needed for compiling/linking.")
         glob_install(
             include=[
-                "include/**",
-                "lib/**",
+                "include/**/*",
+                "lib/**/*",
             ],
             exclude=[
                 # versioned libs
@@ -154,9 +133,9 @@ def sort_artifacts_based_on_name(basename):
         print("this package is tools, docs, and misc files needed for tools.")
         glob_install(
             include=[
-                "bin/**",
-                "doc/**",
-                "share/**",
+                "bin/**/*",
+                "doc/**/*",
+                "share/**/*",
             ],
             exclude=[
                 "bin/*.dll",
