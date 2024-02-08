@@ -1,3 +1,6 @@
+set -e
+
+mkdir stage
 mkdir build
 cd build
 # 2022/04/07 hmaarrfk:
@@ -10,7 +13,7 @@ AVIF_BUILD_TESTS=OFF
 
 # Other codecs cannot be enabled because they are not on conda-forge
 cmake ${CMAKE_ARGS} -GNinja \
--DCMAKE_INSTALL_PREFIX="$PREFIX" \
+-DCMAKE_INSTALL_PREFIX="$SRC_DIR/stage" \
 -DCMAKE_INSTALL_LIBDIR=lib \
 -DBUILD_SHARED_LIBS=ON \
 -DAVIF_BUILD_TESTS=ON \
@@ -23,6 +26,6 @@ cmake ${CMAKE_ARGS} -GNinja \
 -DAVIF_BUILD_TESTS=${AVIF_BUILD_TESTS} \
 ${SRC_DIR}
 
-ninja
+cmake --build .
 
-ninja install
+cmake --install . --strip

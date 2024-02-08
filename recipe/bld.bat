@@ -1,10 +1,11 @@
+mkdir stage
 mkdir build
 cd build
 if errorlevel 1 exit /b 1
 
 :: Other codecs cannot be enabled because they are not on conda-forge
 cmake .. -GNinja                                 ^
-  -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" ^
+  -DCMAKE_INSTALL_PREFIX:PATH="%SRC_DIR%\stage" ^
   -DCMAKE_PREFIX_PATH:PATH="%LIBRARY_PREFIX%"    ^
   -DCMAKE_INSTALL_LIBDIR=lib                     ^
   -DCMAKE_BUILD_TYPE=Release                     ^
@@ -18,8 +19,8 @@ cmake .. -GNinja                                 ^
 
 if errorlevel 1 exit /b 1
 
-ninja
+cmake --build .
 if errorlevel 1 exit /b 1
 
-ninja install
+cmake --install . --strip
 if errorlevel 1 exit /b 1
