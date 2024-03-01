@@ -17,13 +17,14 @@ source:
     - 000-find-library.patch
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
     - cmake
     - {{ compiler('c') }}
     - ninja
+    - m2-sed  # [win]
   host:
     - aom
     - dav1d
