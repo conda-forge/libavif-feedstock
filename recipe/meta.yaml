@@ -17,7 +17,7 @@ source:
     - 000-find-library.patch
 
 build:
-  number: 3
+  number: 4
 
 requirements:
   build:
