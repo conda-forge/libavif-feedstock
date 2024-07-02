@@ -21,6 +21,6 @@ dav1d:
 macos_machine:
 - arm64-apple-darwin20.0.0
 svt_av1:
-- 2.1.0
+- 2.1.2
 target_platform:
 - osx-arm64

@@ -19,7 +19,7 @@ dav1d:
 docker_image:
 - quay.io/condaforge/linux-anvil-cos7-x86_64
 svt_av1:
-- 2.1.0
+- 2.1.2
 target_platform:
 - linux-ppc64le
 zip_keys:

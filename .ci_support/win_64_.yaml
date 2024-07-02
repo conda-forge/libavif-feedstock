@@ -11,6 +11,6 @@ channel_targets:
 dav1d:
 - 1.2.1
 svt_av1:
-- 2.1.0
+- 2.1.2
 target_platform:
 - win-64
