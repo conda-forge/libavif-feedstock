@@ -12,6 +12,7 @@ cd build
 AVIF_BUILD_TESTS=OFF
 
 # Other codecs cannot be enabled because they are not on conda-forge
+# libgav1 and libyuv not available on channel. Last checked July 2024.
 cmake ${CMAKE_ARGS} -GNinja \
 -DCMAKE_INSTALL_PREFIX="$SRC_DIR/stage" \
 -DCMAKE_INSTALL_LIBDIR=lib \
