@@ -21,6 +21,6 @@ dav1d:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 svt_av1:
-- 2.2.1
+- 2.3.0
 target_platform:
 - osx-64
