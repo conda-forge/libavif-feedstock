@@ -10,7 +10,9 @@ channel_targets:
 - conda-forge main
 dav1d:
 - 1.2.1
+libavif:
+- '1'
 svt_av1:
-- 2.3.0
+- 3.0.0
 target_platform:
 - win-64
