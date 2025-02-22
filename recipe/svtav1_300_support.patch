@@ -1,0 +1,233 @@
+From d274446a97085bb8f25cb908e6e2e6b95e8f20a8 Mon Sep 17 00:00:00 2001
+From: Vincent Rabaud <vrabaud@google.com>
+Date: Tue, 11 Feb 2025 11:37:41 +0100
+Subject: [PATCH 1/4] WIP: try SVT-AV1 pre 3.0
+
+---
+ cmake/Modules/LocalSvt.cmake |  8 +++++++-
+ src/codec_svt.c              | 10 +++++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/Modules/LocalSvt.cmake b/cmake/Modules/LocalSvt.cmake
+index 3ee03e2e53..43326f7572 100644
+--- a/cmake/Modules/LocalSvt.cmake
++++ b/cmake/Modules/LocalSvt.cmake
+@@ -1,4 +1,4 @@
+-set(AVIF_SVT_GIT_TAG "v2.3.0")
++set(AVIF_SVT_GIT_TAG "38bc2f92f0360f8280858f40f3229f796c70b9c5")
+ 
+ set(LIB_FILENAME "${AVIF_SOURCE_DIR}/ext/SVT-AV1/Bin/Release/${AVIF_LIBRARY_PREFIX}SvtAv1Enc${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ 
+@@ -45,6 +45,7 @@ else()
+         GIT_TAG "${AVIF_SVT_GIT_TAG}"
+         UPDATE_COMMAND ""
+         GIT_SHALLOW ON
++        PATCH_COMMAND sed -i.bak -e "s/SVT_AV1_VERSION_MAJOR 2/SVT_AV1_VERSION_MAJOR 3/g" Source/API/EbSvtAv1.h
+     )
+ 
+     set(BUILD_DEC OFF CACHE BOOL "")
+@@ -57,6 +58,11 @@ else()
+     set(CMAKE_OUTPUT_DIRECTORY_ORIG "${CMAKE_OUTPUT_DIRECTORY}")
+     set(CMAKE_OUTPUT_DIRECTORY "${SVT_BINARY_DIR}" CACHE INTERNAL "")
+ 
++    # For now, this creates compilation issues:
++    # _deps/svt-build/libSvtAv1Enc.a: error adding symbols: file format not recognized
++    # clang: error: linker command failed with exit code 1 (use -v to see invocation)
++    set(SVT_AV1_LTO OFF)
++
+     avif_fetchcontent_populate_cmake(svt)
+ 
+     set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_ORIG} CACHE STRING "" FORCE)
+diff --git a/src/codec_svt.c b/src/codec_svt.c
+index 193f244a1e..2f74704d75 100644
+--- a/src/codec_svt.c
++++ b/src/codec_svt.c
+@@ -114,7 +114,11 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+         // See https://gitlab.com/AOMediaCodec/SVT-AV1/-/issues/1697.
+         memset(svt_config, 0, sizeof(EbSvtAv1EncConfiguration));
+ 
++#if SVT_AV1_CHECK_VERSION(3, 0, 0)
++        res = svt_av1_enc_init_handle(&codec->internal->svt_encoder, svt_config);
++#else
+         res = svt_av1_enc_init_handle(&codec->internal->svt_encoder, NULL, svt_config);
++#endif
+         if (res != EB_ErrorNone) {
+             goto cleanup;
+         }
+@@ -125,14 +129,18 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+         svt_config->is_16bit_pipeline = image->depth > 8;
+ #endif
+ 
++#if !SVT_AV1_CHECK_VERSION(1, 5, 0)
+         // Follow comment in svt header: set if input is HDR10 BT2020 using SMPTE ST2084 (PQ).
+         svt_config->high_dynamic_range_input = (image->depth == 10 && image->colorPrimaries == AVIF_COLOR_PRIMARIES_BT2020 &&
+                                                 image->transferCharacteristics == AVIF_TRANSFER_CHARACTERISTICS_SMPTE2084 &&
+                                                 image->matrixCoefficients == AVIF_MATRIX_COEFFICIENTS_BT2020_NCL);
++#endif
+ 
+         svt_config->source_width = image->width;
+         svt_config->source_height = image->height;
+-        svt_config->logical_processors = encoder->maxThreads;
++#if SVT_AV1_CHECK_VERSION(3, 0, 0)
++        svt_config->level_of_parallelism = encoder->maxThreads;
++#endif
+         svt_config->enable_adaptive_quantization = 2;
+         // disable 2-pass
+ #if SVT_AV1_CHECK_VERSION(0, 9, 0)
+
+From 0889b45999d372632ef7cf4924bc04c5307d772d Mon Sep 17 00:00:00 2001
+From: Vincent Rabaud <vrabaud@google.com>
+Date: Wed, 12 Feb 2025 15:22:37 +0100
+Subject: [PATCH 2/4] Fix according to comments
+
+---
+ src/codec_svt.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/src/codec_svt.c b/src/codec_svt.c
+index 2f74704d75..a4dde833d2 100644
+--- a/src/codec_svt.c
++++ b/src/codec_svt.c
+@@ -9,6 +9,9 @@
+ 
+ #include <stdint.h>
+ #include <string.h>
++#if SVT_AV1_CHECK_VERSION(3, 0, 0)
++#include <stdbool.h>
++#endif
+ 
+ // The SVT_AV1_VERSION_MAJOR, SVT_AV1_VERSION_MINOR, SVT_AV1_VERSION_PATCHLEVEL, and
+ // SVT_AV1_CHECK_VERSION macros were added in SVT-AV1 v0.9.0. Define these macros for older
+@@ -129,7 +132,7 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+         svt_config->is_16bit_pipeline = image->depth > 8;
+ #endif
+ 
+-#if !SVT_AV1_CHECK_VERSION(1, 5, 0)
++#if !SVT_AV1_CHECK_VERSION(3, 0, 0)
+         // Follow comment in svt header: set if input is HDR10 BT2020 using SMPTE ST2084 (PQ).
+         svt_config->high_dynamic_range_input = (image->depth == 10 && image->colorPrimaries == AVIF_COLOR_PRIMARIES_BT2020 &&
+                                                 image->transferCharacteristics == AVIF_TRANSFER_CHARACTERISTICS_SMPTE2084 &&
+@@ -140,6 +143,8 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+         svt_config->source_height = image->height;
+ #if SVT_AV1_CHECK_VERSION(3, 0, 0)
+         svt_config->level_of_parallelism = encoder->maxThreads;
++#else
++        svt_config->logical_processors = encoder->maxThreads;
+ #endif
+         svt_config->enable_adaptive_quantization = 2;
+         // disable 2-pass
+@@ -183,7 +188,11 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+ 
+         // In order for SVT-AV1 to force keyframes by setting pic_type to
+         // EB_AV1_KEY_PICTURE on any frame, force_key_frames has to be set.
++#if SVT_AV1_CHECK_VERSION(3, 0, 0)
++        svt_config->force_key_frames = true;
++#else
+         svt_config->force_key_frames = TRUE;
++#endif
+ 
+         // keyframeInterval == 1 case is handled when encoding each frame by
+         // setting pic_type to EB_AV1_KEY_PICTURE. For keyframeInterval > 1,
+
+From 5b3b3969459a6731c8915ef07c72adb90b9e8a0d Mon Sep 17 00:00:00 2001
+From: Vincent Rabaud <vrabaud@google.com>
+Date: Wed, 12 Feb 2025 16:09:58 +0100
+Subject: [PATCH 3/4] Revert the version change
+
+---
+ cmake/Modules/LocalSvt.cmake | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/cmake/Modules/LocalSvt.cmake b/cmake/Modules/LocalSvt.cmake
+index 43326f7572..670db48b8d 100644
+--- a/cmake/Modules/LocalSvt.cmake
++++ b/cmake/Modules/LocalSvt.cmake
+@@ -1,4 +1,4 @@
+-set(AVIF_SVT_GIT_TAG "38bc2f92f0360f8280858f40f3229f796c70b9c5")
++set(AVIF_SVT_GIT_TAG "v2.3.0")
+ 
+ set(LIB_FILENAME "${AVIF_SOURCE_DIR}/ext/SVT-AV1/Bin/Release/${AVIF_LIBRARY_PREFIX}SvtAv1Enc${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ 
+@@ -45,7 +45,6 @@ else()
+         GIT_TAG "${AVIF_SVT_GIT_TAG}"
+         UPDATE_COMMAND ""
+         GIT_SHALLOW ON
+-        PATCH_COMMAND sed -i.bak -e "s/SVT_AV1_VERSION_MAJOR 2/SVT_AV1_VERSION_MAJOR 3/g" Source/API/EbSvtAv1.h
+     )
+ 
+     set(BUILD_DEC OFF CACHE BOOL "")
+
+From 6c98deaa63928dddb90be8098abe262f711fdc19 Mon Sep 17 00:00:00 2001
+From: Vincent Rabaud <vrabaud@google.com>
+Date: Thu, 13 Feb 2025 09:42:33 +0100
+Subject: [PATCH 4/4] Fix according to comments
+
+---
+ cmake/Modules/LocalSvt.cmake |  9 +++++----
+ src/codec_svt.c              | 16 +---------------
+ 2 files changed, 6 insertions(+), 19 deletions(-)
+
+diff --git a/cmake/Modules/LocalSvt.cmake b/cmake/Modules/LocalSvt.cmake
+index 670db48b8d..7ef60e4cb8 100644
+--- a/cmake/Modules/LocalSvt.cmake
++++ b/cmake/Modules/LocalSvt.cmake
+@@ -57,10 +57,11 @@ else()
+     set(CMAKE_OUTPUT_DIRECTORY_ORIG "${CMAKE_OUTPUT_DIRECTORY}")
+     set(CMAKE_OUTPUT_DIRECTORY "${SVT_BINARY_DIR}" CACHE INTERNAL "")
+ 
+-    # For now, this creates compilation issues:
+-    # _deps/svt-build/libSvtAv1Enc.a: error adding symbols: file format not recognized
+-    # clang: error: linker command failed with exit code 1 (use -v to see invocation)
+-    set(SVT_AV1_LTO OFF)
++    if(CMAKE_INTERPROCEDURAL_OPTIMIZATION)
++        set(SVT_AV1_LTO ON)
++    else()
++        set(SVT_AV1_LTO OFF)
++    endif()
+ 
+     avif_fetchcontent_populate_cmake(svt)
+ 
+diff --git a/src/codec_svt.c b/src/codec_svt.c
+index a4dde833d2..986c3d14de 100644
+--- a/src/codec_svt.c
++++ b/src/codec_svt.c
+@@ -7,11 +7,9 @@
+ 
+ #include "svt-av1/EbSvtAv1Enc.h"
+ 
++#include <stdbool.h>
+ #include <stdint.h>
+ #include <string.h>
+-#if SVT_AV1_CHECK_VERSION(3, 0, 0)
+-#include <stdbool.h>
+-#endif
+ 
+ // The SVT_AV1_VERSION_MAJOR, SVT_AV1_VERSION_MINOR, SVT_AV1_VERSION_PATCHLEVEL, and
+ // SVT_AV1_CHECK_VERSION macros were added in SVT-AV1 v0.9.0. Define these macros for older
+@@ -131,14 +129,6 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+ #if !SVT_AV1_CHECK_VERSION(0, 9, 0)
+         svt_config->is_16bit_pipeline = image->depth > 8;
+ #endif
+-
+-#if !SVT_AV1_CHECK_VERSION(3, 0, 0)
+-        // Follow comment in svt header: set if input is HDR10 BT2020 using SMPTE ST2084 (PQ).
+-        svt_config->high_dynamic_range_input = (image->depth == 10 && image->colorPrimaries == AVIF_COLOR_PRIMARIES_BT2020 &&
+-                                                image->transferCharacteristics == AVIF_TRANSFER_CHARACTERISTICS_SMPTE2084 &&
+-                                                image->matrixCoefficients == AVIF_MATRIX_COEFFICIENTS_BT2020_NCL);
+-#endif
+-
+         svt_config->source_width = image->width;
+         svt_config->source_height = image->height;
+ #if SVT_AV1_CHECK_VERSION(3, 0, 0)
+@@ -188,11 +178,7 @@ static avifResult svtCodecEncodeImage(avifCodec * codec,
+ 
+         // In order for SVT-AV1 to force keyframes by setting pic_type to
+         // EB_AV1_KEY_PICTURE on any frame, force_key_frames has to be set.
+-#if SVT_AV1_CHECK_VERSION(3, 0, 0)
+         svt_config->force_key_frames = true;
+-#else
+-        svt_config->force_key_frames = TRUE;
+-#endif
+ 
+         // keyframeInterval == 1 case is handled when encoding each frame by
+         // setting pic_type to EB_AV1_KEY_PICTURE. For keyframeInterval > 1,
