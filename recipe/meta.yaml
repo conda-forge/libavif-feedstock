@@ -13,9 +13,6 @@ package:
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 2182f4900d1a9617cee89746922a58dd825f2a3547f23907b8d78dc3685f7d8c
-  patches:
-    # https://github.com/AOMediaCodec/libavif/pull/2607
-    - svtav1_300_support.patch
 
 build:
   number: 0
