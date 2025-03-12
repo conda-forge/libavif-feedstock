@@ -23,6 +23,6 @@ libavif:
 macos_machine:
 - x86_64-apple-darwin13.4.0
 svt_av1:
-- 3.0.0
+- 3.0.1
 target_platform:
 - osx-64

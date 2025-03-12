@@ -21,6 +21,6 @@ docker_image:
 libavif:
 - '1'
 svt_av1:
-- 3.0.0
+- 3.0.1
 target_platform:
 - linux-ppc64le
