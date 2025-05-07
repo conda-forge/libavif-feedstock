@@ -15,7 +15,7 @@ source:
   sha256: 9c859c7c12ccb0f407511bfe303e6a7247f5f6738f54852662c6df8048daddf4
 
 build:
-  number: 2
+  number: 3
 
 requirements:
   build:
@@ -27,8 +27,8 @@ requirements:
   host:
     - aom
     - dav1d
-    # - libpng
-    # - jpeg
+    - libpng
+    - libjpeg-turbo
     - rav1e
     - svt-av1
 
@@ -47,8 +47,8 @@ outputs:
       host:
         - aom
         - dav1d
-        # - libpng
-        # - jpeg
+        - libpng
+        - libjpeg-turbo
         - rav1e
         - svt-av1
       run:
@@ -87,8 +87,8 @@ outputs:
       host:
         - aom
         - dav1d
-        # - libpng
-        # - jpeg
+        - libpng
+        - libjpeg-turbo
         - rav1e
         - svt-av1
       run:
