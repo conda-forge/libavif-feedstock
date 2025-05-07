@@ -100,7 +100,7 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-_libavif_api-green.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-__libavif__api-green.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/_libavif_api.svg)](https://anaconda.org/conda-forge/_libavif_api) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libavif-green.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif.svg)](https://anaconda.org/conda-forge/libavif) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-libavif16-green.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libavif16.svg)](https://anaconda.org/conda-forge/libavif16) |
 
@@ -220,7 +220,4 @@ Feedstock Maintainers
 
 * [@carterbox](https://github.com/carterbox/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
-
-
-<!-- dummy commit to enable rerendering -->
 
