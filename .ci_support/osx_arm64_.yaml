@@ -22,6 +22,8 @@ libavif:
 - '1'
 macos_machine:
 - arm64-apple-darwin20.0.0
+rav1e:
+- '0.7'
 svt_av1:
 - 3.0.2
 target_platform:
