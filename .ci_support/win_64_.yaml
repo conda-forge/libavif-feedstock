@@ -1,7 +1,7 @@
 aom:
 - '3.9'
 c_compiler:
-- vs2019
+- vs2022
 c_stdlib:
 - vs
 channel_sources:
@@ -15,6 +15,6 @@ libavif:
 rav1e:
 - '0.7'
 svt_av1:
-- 3.0.2
+- 3.1.1
 target_platform:
 - win-64
