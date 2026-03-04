@@ -18,7 +18,7 @@ source:
    - 2971-svt140.patch
 
 build:
-  number: 4
+  number: 5
 
 requirements:
   build:
