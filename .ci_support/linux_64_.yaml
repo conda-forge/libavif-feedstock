@@ -19,7 +19,7 @@ docker_image:
 libavif:
 - '1'
 rav1e:
-- '0.7'
+- '0.8'
 svt_av1:
 - 4.0.1
 target_platform:
