@@ -1,5 +1,5 @@
 # NOTE: Humans must also update the library version in the tests section of this recipe
-{% set version = "1.4.0" %}
+{% set version = "1.4.1" %}
 # Look in the libavif top level CMakeLists.txt for the updated library
 # version (not the same as the project version) to update parameters for existence checks
 # The SO name changes every version https://github.com/AOMediaCodec/libavif/issues/799
@@ -12,7 +12,7 @@ package:
 
 source:
   url: https://github.com/AOMediaCodec/libavif/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 713e2b998ca0bf5473fe4624afdbc7fa9f6e4799dd414020fe67d56f6997bf4e
+  sha256: d4aea31a4becb3273ba7968221be2e48148ba05eb8a68d14e671963e17785648
 
 build:
   number: 0
