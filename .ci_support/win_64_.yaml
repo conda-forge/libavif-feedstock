@@ -1,5 +1,5 @@
 aom:
-- '3.9'
+- '3.14'
 c_compiler:
 - vs2022
 c_stdlib:
