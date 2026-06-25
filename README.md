@@ -17,16 +17,18 @@ This library aims to be a friendly, portable C implementation of the AV1
 Image File Format, as described here
 <https://aomediacodec.github.io/av1-avif/>.
 
-
 About _libavif_api
 ------------------
 
+Home: https://github.com/AOMediaCodec/libavif
 
-
-Package license: 
+Package license: BSD-2-Clause
 
 Summary: An empty package that prevents multiple ABIs being installed simultaneously on Windows.
 
+This library aims to be a friendly, portable C implementation of the AV1
+Image File Format, as described here
+<https://aomediacodec.github.io/av1-avif/>.
 
 Current build status
 ====================

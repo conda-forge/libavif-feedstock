@@ -10,8 +10,6 @@ channel_targets:
 - conda-forge main
 dav1d:
 - 1.2.1
-libavif:
-- '1'
 rav1e:
 - '0.8'
 svt_av1:
