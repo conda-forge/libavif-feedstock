@@ -65,32 +65,48 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('libavif' ~ so_major_version) }}
     tests:
-      - script:
-          - if: unix
-            then:
-              - test -f ${PREFIX}/include/avif/avif.h
-              - test -f ${PREFIX}/lib/libavif${SHLIB_EXT}
-              - test -f ${PREFIX}/lib/pkgconfig/libavif.pc
-              - test -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake
-              - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake
-              - test -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake
-          - if: linux
-            then:
-              - test -f ${PREFIX}/lib/libavif.so.${{ so_major_version }}
-              - test -f ${PREFIX}/lib/libavif.so.${{ so_version }}
-          - if: osx
-            then:
-              - test -f ${PREFIX}/lib/libavif.${{ so_major_version }}.dylib
-              - test -f ${PREFIX}/lib/libavif.${{ so_version }}.dylib
-          - if: win
-            then:
-              - if not exist %PREFIX%\\Library\\include\\avif\\avif.h exit 1
-              - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1
-              - if not exist %PREFIX%\\Library\\lib\\avif.lib exit 1
-              - if not exist %PREFIX%\\Library\\lib\\pkgconfig\\libavif.pc exit 1
-              - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config.cmake exit 1
-              - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-release.cmake exit 1
-              - if not exist %PREFIX%\\Library\\lib\\cmake\\libavif\\libavif-config-version.cmake exit 1
+      # The dev package owns headers, the unversioned shared lib, pkgconfig,
+      # cmake configs (and the Windows import lib) but must NOT contain the
+      # versioned shared libraries (those live in libavif${{ so_major_version }}).
+      - if: linux
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - include/avif/avif.h
+                  - lib/libavif.so
+                  - lib/pkgconfig/libavif.pc
+                  - lib/cmake/libavif/libavif-config.cmake
+                  - lib/cmake/libavif/libavif-config-release.cmake
+                  - lib/cmake/libavif/libavif-config-version.cmake
+                not_exists:
+                  - lib/libavif.so.*
+      - if: osx
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - include/avif/avif.h
+                  - lib/libavif.dylib
+                  - lib/pkgconfig/libavif.pc
+                  - lib/cmake/libavif/libavif-config.cmake
+                  - lib/cmake/libavif/libavif-config-release.cmake
+                  - lib/cmake/libavif/libavif-config-version.cmake
+                not_exists:
+                  - lib/libavif.*.dylib
+      - if: win
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - Library/include/avif/avif.h
+                  - Library/lib/avif.lib
+                  - Library/lib/pkgconfig/libavif.pc
+                  - Library/lib/cmake/libavif/libavif-config.cmake
+                  - Library/lib/cmake/libavif/libavif-config-release.cmake
+                  - Library/lib/cmake/libavif/libavif-config-version.cmake
+                not_exists:
+                  - Library/bin/avif.dll
 
   - package:
       name: libavif${{ so_major_version }}
@@ -112,31 +128,44 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('libavif' ~ so_major_version) }}
     tests:
-      - script:
-          # Need these
-          - if: linux
-            then:
-              - test -f ${PREFIX}/lib/libavif.so.${{ so_major_version }}
-              - test -f ${PREFIX}/lib/libavif.so.${{ so_version }}
-          - if: osx
-            then:
-              - test -f ${PREFIX}/lib/libavif.${{ so_major_version }}.dylib
-              - test -f ${PREFIX}/lib/libavif.${{ so_version }}.dylib
-          - if: win
-            then:
-              - if not exist %PREFIX%\\Library\\bin\\avif.dll exit 1
-          # Exclude these
-          - if: unix
-            then:
-              - test ! -f ${PREFIX}/include/avif/avif.h
-              - test ! -f ${PREFIX}/lib/libavif${SHLIB_EXT}
-              - test ! -f ${PREFIX}/lib/pkgconfig/libavif.pc
-              - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config.cmake
-              - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-release.cmake
-              - test ! -f ${PREFIX}/lib/cmake/libavif/libavif-config-version.cmake
-          - if: win
-            then:
-              - if exist %PREFIX%\\Library\\lib\\avif.lib exit 1
+      # The runtime package owns ONLY the versioned shared libraries (Windows
+      # DLL) and must NOT contain the dev files (headers, unversioned lib,
+      # pkgconfig, cmake configs, import lib).
+      - if: linux
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - lib/libavif.so.${{ so_major_version }}
+                  - lib/libavif.so.${{ so_version }}
+                not_exists:
+                  - include/avif/avif.h
+                  - lib/libavif.so
+                  - lib/pkgconfig/libavif.pc
+                  - lib/cmake/libavif/*
+      - if: osx
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - lib/libavif.${{ so_major_version }}.dylib
+                  - lib/libavif.${{ so_version }}.dylib
+                not_exists:
+                  - include/avif/avif.h
+                  - lib/libavif.dylib
+                  - lib/pkgconfig/libavif.pc
+                  - lib/cmake/libavif/*
+      - if: win
+        then:
+          - package_contents:
+              files:
+                exists:
+                  - Library/bin/avif.dll
+                not_exists:
+                  - Library/include/avif/avif.h
+                  - Library/lib/avif.lib
+                  - Library/lib/pkgconfig/libavif.pc
+                  - Library/lib/cmake/libavif/*
 
   # Clobber preventer for Windows; prevents multiple dll files from being
   # installed simultaneously. This lets us avoid exporting a strict pin on the
