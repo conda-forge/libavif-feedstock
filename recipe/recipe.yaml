@@ -1,11 +1,7 @@
 schema_version: 1
 
-# NOTE: Humans must also update the library version in the tests section of this recipe
 context:
   version: "1.4.2"
-  # Look in the libavif top level CMakeLists.txt for the updated library
-  # version (not the same as the project version) to update parameters for existence checks
-  # The SO name changes every version https://github.com/AOMediaCodec/libavif/issues/799
   so_version: ${{ "16." ~ (version | split("."))[1] ~ "." ~ (version | split("."))[2] }}
   so_major_version: ${{ (so_version | split("."))[0] }}
   build: 2
