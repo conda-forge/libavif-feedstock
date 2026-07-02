@@ -34,8 +34,6 @@ outputs:
       host:
         - aom
         - dav1d
-        # - libpng
-        # - jpeg
         - rav1e
         - svt-av1
 
