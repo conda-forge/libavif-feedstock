@@ -18,8 +18,6 @@ channel_targets:
 - conda-forge main
 dav1d:
 - 1.2.1
-libavif:
-- '1'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 rav1e:
