@@ -23,6 +23,6 @@ macos_machine:
 rav1e:
 - '0.8'
 svt_av1:
-- 4.0.1
+- 4.2.0
 target_platform:
 - osx-64

@@ -13,6 +13,6 @@ dav1d:
 rav1e:
 - '0.8'
 svt_av1:
-- 4.0.1
+- 4.2.0
 target_platform:
 - win-64

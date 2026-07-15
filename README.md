@@ -208,4 +208,5 @@ Feedstock Maintainers
 
 * [@carterbox](https://github.com/carterbox/)
 * [@hmaarrfk](https://github.com/hmaarrfk/)
+* [@pavelzw](https://github.com/pavelzw/)
 
