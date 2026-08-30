@@ -7,7 +7,7 @@ aom:
 c_compiler:
 - clang
 c_compiler_version:
-- '19'
+- '21'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
@@ -16,8 +16,8 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-dav1d:
-- 1.2.1
+dav1d_devel:
+- 1.5.4
 macos_machine:
 - arm64-apple-darwin20.0.0
 rav1e:
