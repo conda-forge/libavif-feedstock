@@ -3,7 +3,7 @@ aom:
 c_compiler:
 - gcc
 c_compiler_version:
-- '14'
+- '15'
 c_stdlib:
 - sysroot
 c_stdlib_version:
@@ -12,10 +12,10 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-dav1d:
-- 1.2.1
+dav1d_devel:
+- 1.5.4
 docker_image:
-- quay.io/condaforge/linux-anvil-x86_64:alma9
+- quay.io/condaforge/linux-anvil-x86_64:alma10
 rav1e:
 - '0.8'
 svt_av1:
