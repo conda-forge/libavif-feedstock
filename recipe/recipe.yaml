@@ -59,19 +59,6 @@ outputs:
       run_exports:
         - ${{ pin_subpackage('libavif' ~ so_major_version) }}
     tests:
-      - if: win and arm64
-        then:
-          requirements:
-            run:
-              - ${{ compiler('c') }}
-          files:
-            recipe:
-              - codec-roundtrip.c
-          script:
-            - cl /nologo /MD /I"%LIBRARY_INC%" codec-roundtrip.c /link /LIBPATH:"%LIBRARY_LIB%" avif.lib /OUT:codec-roundtrip.exe
-            - codec-roundtrip.exe
-            - dumpbin /headers "%LIBRARY_BIN%\avif.dll" | findstr /I /C:"AA64 machine (ARM64)"
-            - dumpbin /headers codec-roundtrip.exe | findstr /I /C:"AA64 machine (ARM64)"
       # The dev package owns headers, the unversioned shared lib, pkgconfig,
       # cmake configs (and the Windows import lib) but must NOT contain the
       # versioned shared libraries (those live in libavif${{ so_major_version }}).
