@@ -1,0 +1,18 @@
+aom:
+- '3.14'
+c_compiler:
+- vs2022
+c_stdlib:
+- vs
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+dav1d_devel:
+- 1.5.4
+rav1e:
+- '0.8'
+svt_av1:
+- 4.2.0
+target_platform:
+- win-arm64
