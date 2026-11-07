@@ -1,7 +1,7 @@
 DOCKER_PLATFORM:
 - linux/aarch64
 aom:
-- '3.14'
+- '3.15'
 c_compiler:
 - gcc
 c_compiler_version:
